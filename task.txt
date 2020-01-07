@@ -1,0 +1,34 @@
+Connexion inscription
+
+3 niveaux:
+-user
+-prof
+-admin
+
+entity:
+user:password,email,username
+matiere:notes,users,title
+notes:nombre,commentaire
+
+
+Un professeur a des matieres 
+Un eleve a des matieres
+
+
+Un professeur a des sujets 
+Un eleve a des sujets 
+
+Un professeur na pas de notes a lui
+Un élève a des notes a lui
+
+
+
+LE homepage étudiant:
+MEs matières
+Moyennes de notes avec possibilité d'en voir le détail .
+Voir la liste des matières .
+
+
+Pour les notes: 
+pour chaque matière : moyenne de matière = notes*coeff/nombres de notes
+moyenne general = moyennes matière /nombre matiere

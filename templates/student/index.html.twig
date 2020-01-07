@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StudentController!{% endblock %}
+
+{% block body %}
+<div class="card text-center">
+  <div class="card-body">
+    <b>Here is the list of all the subjects you are inscripted to : You have actually {{user.subjects|length}} subjects .</b>
+  </div>
+</div>    
+    
+ 
+{% for key,value in user.moyenne %}
+  
+  <div class="card">
+<div class="card-body">
+      <div class="card-header mt-3 mb-4">
+        {{key}}
+        {% if not is_granted("ROLE_PROFESSOR") %}
+        {% if value.hasBeenNoted == false %}
+        Vous n'avez pas encore de notes pour cette matière
+        {% else %}
+        {{value.moyenne}}
+        {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="card-footer text-muted">
+          <a href={{ path('subject_show',{id:value.subject_id}) }} class="btn btn-primary mt-3 mb-3">Go see the subject</a>
+
+      </div>
+      </div>
+  </div>
+    
+   
+    
+     
+{% endfor %}
+
+{% if user.moyenneGeneral == false %}
+Vous n'avez pas encore de notes et n'avez par conséquent pas encore de moyenne général
+{% else %}
+ {% if not is_granted("ROLE_PROFESSOR") %}
+Votre moyenne général est de {{user.moyenneGeneral}}
+<div class="card-footer text-muted">
+
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

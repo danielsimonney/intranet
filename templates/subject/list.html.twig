@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StudentController!{% endblock %}
+
+{% block body %}
+{% for subject in subjects %}
+    <div class="card mt-3 mb-4">
+        <h3>
+            {{subject.title}}
+        </h3>
+<a href="{{ path('assign_user', {'id':subject.id}) }}" class="btn btn-warning mr-3"> S'inscrire à cette matière</a>
+    </div>
+{% endfor %}
+
+<h2>Cours déjà inscrit</h2>
+{% for subject in dejaInscrit %}
+    <div class="card mt-3 mb-4">
+        <h3>
+            {{subject.title}}
+        </h3>
+
+        </div>
+{% endfor %}
+{% endblock %}

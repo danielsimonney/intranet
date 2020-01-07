@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+Here is the list of all the users registered in your app !
+ <ul class="list-group">
+    {% for user in users %}
+ <a href={{path('user_profile',{id:user.id}) }}> <li class="list-group-item">firstname: {{user.lastname}} lastname: {{user.firstname}} email : {{user.email}} 
+ 
+ Role:{% if user.isGranted("ROLE_ADMIN") %}Administrateur
+ {% elseif user.isGranted("ROLE_PROFESSOR") %}Professeur
+  {% else %}Etudiant{% endif %}
+
+ </li><a/>
+    {% endfor %}
+    </ul>
+  
+    
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}user {{user.firstname}} {% endblock %}
+
+{% block body %}
+<div class="card-body">
+ <h3>
+ L'élève {{user.firstname}} {{user.lastname}}
+ </h3>
+</div>
+
+<div class="card mt-3 mb-4 mr-4 ml-4">
+        <a href="{{ path('change_status', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Changer le status de l'utilisateur</a>
+
+ </div>
+{% for subject in user.subjects %}
+    <div class="card mt-4 mb-3">
+  
+  <div class="card-body">
+    <h5 class="card-title"> La matière {{subject.title}}</h5>
+   
+  </div>
+</div>
+<div class="card mt-3 mb-4">
+Notes de l'élève</div>
+
+{% if (user.moyenneFromSubject(subject)== false) %}
+L'élève n'a pas encore de notes pour ce cours pour l'instant
+{% else %}
+ <table class="table">
+ <tr>
+<td>Note</td>
+<td>Coefficient</td>
+<td>Commentaire</td>
+<td>Actions </td>
+ </tr>
+
+{% for note in user.notesFromSubject(subject) %}
+<tr>
+      <th scope="row">{{note.note}}</th>
+      <td> {{note.coeff}} </td>
+      <td> {{note.comment}} </td>
+      <td> 
+        <a href="{{ path('edit_note', {'id_note': note.id,'id_subject':subject.id}) }}" class="btn btn-warning mr-3"> Modifier la note de l'élève</a>
+      </td>
+
+       <td> 
+<form method="post" action="{{ path('suppress_note', {'id_note': note.id,'id_subject': subject.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette note ??');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
+    <button class="btn btn-outline-warning mr-3">Supprimer la note</button>
+</form>
+      </td>
+       
+    </tr>
+     
+    
+
+{% endfor %}
+</table>
+<div class="card mt-3 mb-4">
+
+Moyenne de l'élève pour cette matière: {{user.moyenneFromSubject(subject)}}
+
+</div>
+
+{% endif %}
+<td>
+         <a href="{{ path('new_grade', {'id_user': user.id,'id_subject':subject.id}) }}" class="btn btn-primary btn-lg btn-block"> Donner une nouvelle note à l'élève ou voir ses notes</a>
+      </td>
+{% endfor %}
+
+<div class="card mt-3 mb-4">
+    <p>
+        <h4>Moyenne générale de {{user.firstname}} {{user.lastname}} : <b> {{user.getMoyenneGeneral}} </b> </h4>
+    </p>
+</div>
+        
+        
+        <a href="{{ path('assign_index', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Assigner l'élève a une nouvelle matière</a>
+{% endblock %}

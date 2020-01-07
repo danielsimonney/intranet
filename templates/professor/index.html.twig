@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Ticket{% endblock %}
+
+
+{% block body %}
+<div class="card mt-4 mb-3">
+  
+  <div class="card-body">
+    <h5 class="card-title">Ajouter une note</h5>
+   Vous ajoutez une note à {{user.firstname}} {{user.lastname}} pour la matière {{subject.title}} </p>
+  </div>
+</div>
+<div class="card mt-3 mb-4">
+Notes de l'élève</div>
+{% if (user.moyenneFromSubject(subject)== false) %}
+Vous n'avez pas encore de notes pour ce cours pour l'instant .
+{% else %}
+ <table class="table">
+ <tr>
+<td>Note</td>
+<td>Coefficient</td>
+<td>Commentaire</td>
+<td>Actions </td>
+ </tr>
+
+{% for note in user.notesFromSubject(subject) %}
+<tr>
+      <th scope="row">{{note.note}}</th>
+      <td> {{note.coeff}} </td>
+      <td> {{note.comment}} </td>
+      <td> 
+        <a href="{{ path('edit_note', {'id_note': note.id,'id_subject':subject.id}) }}" class="btn btn-warning mr-3"> Modifier la note de l'élève</a>
+      </td>
+
+       <td> 
+<form method="post" action="{{ path('suppress_note', {'id_note': note.id,'id_subject': subject.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette note ??');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
+    <button class="btn btn-outline-warning mr-3">Supprimer la note</button>
+</form>
+      </td>
+       
+    </tr>
+     
+    
+
+{% endfor %}
+</table>
+<div class="card mt-3 mb-4">
+
+Moyenne de l'élève pour cette matière: {{user.moyenneFromSubject(subject)}}
+
+</div>
+{% endif %}
+{{ form_start(form) }}
+        {{ form_widget(form) }}
+       
+    {{ form_end(form) }}
+{% endblock %}
+
