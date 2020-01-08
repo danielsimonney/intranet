@@ -16,14 +16,16 @@ Here is the list of all the users registered in your app !
  </li><a/>
     {% endfor %}
     </ul>
-<div class="card">
+
+
+<div class="card mb-3 mt-4">
 <a href={{path('subject_new')}}> 
 <h2>Créer une nouvelle matière </h2>
 
  <a/>
 </div>
-
 <h2 class="mt-4 mb-4">Liste des matières</h2>
+
     <ul class="list-group">
     {% for subject in subjects %}
  <a href={{path('subject_assign',{id:subject.id}) }}> <li class="list-group-item">

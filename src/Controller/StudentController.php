@@ -59,15 +59,14 @@ class StudentController extends AbstractController
     public function subjectsList(SubjectRepository $subjectRepository){
         $subjects=$subjectRepository->findAll();
         $already=[];
-        foreach ($subjects as &$subject) {
+        foreach ($subjects as $key=>&$subject) {
             foreach ($subject->getUser() as $value) {
                 if($this->getUser()==$value){
                     $already[]=$subject;
-                    unset($subject);
+                    unset($subjects[$key]);
                 }
             }
         }
-        dump($subjects);
         return $this->render('subject/list.html.twig', [
             'subjects' => $subjects,
             'dejaInscrit'=>$already
