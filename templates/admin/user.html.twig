@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}user {{user.firstname}} {% endblock %}
-
+{% if user.isGranted("ROLE_ADMIN") %}{% set status = "L'administrateur" %}
+ {% elseif user.isGranted("ROLE_PROFESSOR") %}{% set status = "le professeur" %}
+  {% else %} {% set status = "l'étudiant" %} {% endif %} 
 {% block body %}
 <div class="card-body">
  <h3>
- L'élève {{user.firstname}} {{user.lastname}}
+ {{status}} {{user.firstname}} {{user.lastname}}
  </h3>
 </div>
 
 <div class="card mt-3 mb-4 mr-4 ml-4">
-        <a href="{{ path('change_status', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Changer le status de l'utilisateur</a>
+        <a href="{{ path('change_status', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Changer le statut de l'utilisateur</a>
 
  </div>
 {% for subject in user.subjects %}
@@ -65,9 +67,15 @@ Moyenne de l'élève pour cette matière: {{user.moyenneFromSubject(subject)}}
 </div>
 
 {% endif %}
-<td>
+
+{% if user.isGranted("ROLE_ADMIN") %}
+ {% elseif user.isGranted("ROLE_PROFESSOR") %}Professeur
+  {% else %}
+  <td>
          <a href="{{ path('new_grade', {'id_user': user.id,'id_subject':subject.id}) }}" class="btn btn-primary btn-lg btn-block"> Donner une nouvelle note à l'élève ou voir ses notes</a>
       </td>
+  {% endif %}
+
 {% endfor %}
 
 <div class="card mt-3 mb-4">
@@ -77,5 +85,5 @@ Moyenne de l'élève pour cette matière: {{user.moyenneFromSubject(subject)}}
 </div>
         
         
-        <a href="{{ path('assign_index', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Assigner l'élève a une nouvelle matière</a>
+        <a href="{{ path('assign_index', {'id': user.id}) }}" class="btn btn-primary btn-lg btn-block"> Assigner {{status}} a une nouvelle matière</a>
 {% endblock %}

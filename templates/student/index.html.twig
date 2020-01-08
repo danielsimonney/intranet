@@ -30,17 +30,12 @@
 
       </div>
       </div>
-  </div>
-    
-   
-    
-     
+  </div> 
 {% endfor %}
-
+{% if not is_granted("ROLE_PROFESSOR") %}
 {% if user.moyenneGeneral == false %}
 Vous n'avez pas encore de notes et n'avez par conséquent pas encore de moyenne général
 {% else %}
- {% if not is_granted("ROLE_PROFESSOR") %}
 Votre moyenne général est de {{user.moyenneGeneral}}
 <div class="card-footer text-muted">
 
