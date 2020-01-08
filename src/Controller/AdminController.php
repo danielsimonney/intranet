@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Entity\Subject;
 use App\Entity\User;
 use App\Form\AssignType;
 use App\Form\NoteType;
 use App\Form\RoleType;
+use App\Form\SubjectType;
 use App\Repository\UserRepository;
 use App\Repository\SubjectRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,11 +21,14 @@ class AdminController extends AbstractController
      * Fonction qui va montrer la liste de tt les users de laplication
      * @Route("/admin/index", name="admin_index")
      */
-    public function index(UserRepository $userRepository)
+    public function index(UserRepository $userRepository,SubjectRepository $subjectRepository)
     {
         $users=$userRepository->findAll();
+        $subjects=$subjectRepository->findAll();
         return $this->render('admin/index.html.twig', [
-            'users' => $users
+            'users' => $users,
+            'subjects'=>$subjects
+
         ]);
     }
 
@@ -53,7 +58,49 @@ class AdminController extends AbstractController
         }
         return $this->render('admin/assign.html.twig', [
             'form' => $form->createView(),
-        ]);
+        ]); 
+    }
+
+
+
+    
+    /**
+     * Undocumented function
+     *
+     * @Route("/admin/subject/assign/{id}", name="subject_assign")
+     */
+    public function assignSubject(Subject $subject,Request $request){
+        $form=$this->createForm(SubjectType::class,$subject);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //var_dump($user->getSubjects());die;
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('admin_index');
+        }
+        return $this->render('admin/assign.html.twig', [
+            'form' => $form->createView(),
+        ]); 
+        
+    }
+
+/**
+ * Undocumented function
+ *
+ * @Route("/admin/subject/new", name="subject_new")
+ */
+    public function newSubject(Request $request){
+        $manager = $this->em = $this->getDoctrine()->getManager();
+        $subject=new Subject;
+        $form=$this->createForm(SubjectType::class,$subject);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($subject);
+            $manager->flush();           
+            return $this->redirectToRoute('admin_index');
+        }
+        return $this->render('admin/assign.html.twig', [
+            'form' => $form->createView(),
+        ]); 
     }
 
 
@@ -72,26 +119,6 @@ $form->handleRequest($request);
         return $this->render('admin/status.html.twig', [
             'form' => $form->createView(),
         ]);
-
-    }
-
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function modifyGrade(){
-
-    }
-
-
-    /**
-     * Assigner un user à un subject
-     *
-     * @return void
-     */
-    public function assignUser(){
 
     }
 }
